@@ -5,18 +5,19 @@ using System.Text;
 
 namespace CrackerBarrel
 {
-    public class HexCell
+    public class Cell
     {
         public bool HasPeg { get; set; }
+        public bool CanPegMove { get; set; }
         public bool IsCornerCell { get; set; }
         public CellPosition Position { get; set; }
 
-        public HexCell()
+        public Cell()
         {
 
         }
 
-        public HexCell(CellPosition position)
+        public Cell(CellPosition position)
         {
             this.Position = position;
         }
