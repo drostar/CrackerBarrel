@@ -28,3 +28,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Licensed editor tools that can't be included in repo
+/Assets/ThirdParty/Haste
+/Assets/ThirdParty/Hierarchy2
