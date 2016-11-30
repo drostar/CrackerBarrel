@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Foundation.Databinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace CrackerBarrel
 {
-    public class GameController
+    public class GameController : ObservableBehaviour
     {
-        public float StartTime;
-        public float ElapsedTime { get { throw new NotImplementedException(); } }
+        public float StartTime { get; private set; }
+        public float ElapsedTime { get { return Time.timeSinceLevelLoad - StartTime; } }
 
         public GameMoveHistory MoveHistory { get; set; }
 
@@ -18,6 +20,7 @@ namespace CrackerBarrel
 
         public void NewTriangleGame()
         {
+            StartTime = Time.timeSinceLevelLoad; // capture start time
             GameBoard = new GameBoard();
 
             // build the cells on the board
@@ -25,7 +28,7 @@ namespace CrackerBarrel
             CellPosition startPosition = new CellPosition() { X = 1, Y = edgeLength - 2 };
             for (int y = 0; y < edgeLength; y++)
             {
-                for (int x = 0; x < edgeLength; x++)
+                for (int x = 0; x < (edgeLength - y); x++)
                 {
                     var cell = GameBoard.AddCell(x, y, false);
                     cell.HasPeg = cell.Position != startPosition;

@@ -9,7 +9,17 @@ namespace CrackerBarrel
     public struct CellPosition
     {
         public int X;
+
+        /// <summary>
+        /// Y increases upward
+        /// </summary>
         public int Y;
+        
+        public CellPosition(int x, int y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
 
         public override bool Equals(object obj)
         {
