@@ -9,6 +9,7 @@ namespace CrackerBarrel
     public class GameBoard
     {
         // TODO: make accessor for getting all HexCells instead of accessing directly... at a likely cost of garbage though....
+		// TODO: optimize this cell lookup by CellPosition.
         public List<Cell> HexCells { get; private set; } = new List<Cell>();
 
         public static GameBoard Load(string filePath)
@@ -36,6 +37,10 @@ namespace CrackerBarrel
         }
 
 
+		public bool IsValidCellPosition(CellPosition position)
+		{
+			return HexCells.Any(o => o.Position == position);
+		}
         public Cell GetCellAtPosition(CellPosition position)
         {
             var result = HexCells.FirstOrDefault(o => o.Position == position);
@@ -43,6 +48,16 @@ namespace CrackerBarrel
                 throw new InvalidCellPositionException(position);
             return result;
         }
+		public bool TryGetCellAtPosition(CellPosition position, out Cell cell)
+		{
+			cell = HexCells.FirstOrDefault(o => o.Position == position);
+			return cell != null;
+		}
+
+		public Cell GetCellAtPosition(int x, int y)
+		{
+			return GetCellAtPosition(new CellPosition(x, y));
+		}
 
         /// <summary>
         /// Returns the valid target cells if player were to attempt to move the given <paramref name="fromCell"/>
@@ -59,9 +74,20 @@ namespace CrackerBarrel
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public CellPosition[] GetValidNeighbourPositions(CellPosition position)
+		public IEnumerable<CellPosition> GetValidNeighbourPositions(CellPosition position)
         {
-            throw new NotImplementedException();
+			CellPosition[] possibleNeighbours = new[]
+			{
+				new CellPosition(position.X - 1, position.Y),
+				new CellPosition(position.X + 1, position.Y),
+				new CellPosition(position.X - 1, position.Y + 1),
+				new CellPosition(position.X, position.Y + 1),
+				new CellPosition(position.X, position.Y - 1),
+				new CellPosition(position.X + 1, position.Y - 1),
+			};
+
+			var validNeighbours = possibleNeighbours.Intersect(HexCells.Select(x => x.Position));
+			return validNeighbours;
         }
 
         public Jump ExecuteJump(Cell fromCell, Cell toCell, float timestamp)

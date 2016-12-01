@@ -22,23 +22,50 @@ namespace CrackerBarrel
 
         public GameMoveHistory MoveHistory { get; set; }
         public GameBoard GameBoard { get; set; }
-        
-        public void NewTriangleGame(int edgeLength)
+
+		#region Unity Message Handlers
+
+		void Start()
+		{
+			inputManager.OnActivateObject += InputManager_OnActivateObject;
+			inputManager.OnHighlightObject += InputManager_OnHighlightObject;
+		}
+
+		#endregion
+
+		#region Input Manager Event Handlers
+
+		void InputManager_OnActivateObject(GameObject obj)
+		{
+			CellViewModel cellVM = obj.GetComponent<CellViewModel>();
+
+		}
+
+		void InputManager_OnHighlightObject(bool isHighlighted, GameObject obj)
+		{
+			CellViewModel cellVM = obj.GetComponent<CellViewModel>();
+			cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
+		}
+
+		#endregion
+
+		public void NewTriangleGame(int edgeLength)
         {
             StartTime = Time.timeSinceLevelLoad; // capture start time
             GameBoard = new GameBoard();
 
             // build the cells on the board
-            CellPosition startPosition = new CellPosition() { X = 1, Y = edgeLength - 2 };
+            CellPosition startPosition = new CellPosition() { X = 1, Y = edgeLength - 3 };
             for (int y = 0; y < edgeLength; y++)
             {
                 for (int x = 0; x < (edgeLength - y); x++)
                 {
                     var cell = GameBoard.AddCell(x, y, false);
                     cell.HasPeg = cell.Position != startPosition;
-                    cell.IsCornerCell = (x == 0 || y == 0 || x == edgeLength - 1 || y == edgeLength - 1);
+					cell.IsCornerCell = (x == 0 || y == 0 || x == edgeLength - 1 || y == edgeLength - 1);
                 }
             }
+			updateAvailableMoves();
         }
 
         // TODO: move Jump to GameBoard class?
@@ -52,13 +79,55 @@ namespace CrackerBarrel
             // add move to history
             MoveHistory.Moves.Add(jump);
 
+			// update cell states after move
+			updateAvailableMoves();
+
             // Trigger win/loss if this jump is the last possible.
-            CheckForWinLose();
+            checkForWinLose();
         }
 
-        private void CheckForWinLose()
+		private void checkForWinLose()
         {
 
         }
+
+		private void updateAvailableMoves()
+		{
+			foreach (var cell in GameBoard.HexCells)
+			{
+				// a cell can be part of a valid move if it has a peg 
+				// AND has another peg as a neighbour
+				// AND the the cell beyond that neighbour exists and is empty.
+
+				if (!cell.HasPeg)
+				{
+					cell.CanPegMove = false;
+					continue;
+				}
+
+				// TODO: extract this to GameBoard.GetValidMovesFrom(...)
+				bool hasAtLeastOneJumpableNeighbour = false;
+				var neighbourCells = GameBoard.GetValidNeighbourPositions(cell.Position).Select(x => GameBoard.GetCellAtPosition(x));
+				foreach (var n in neighbourCells)
+				{
+					if (n.HasPeg)
+					{
+						// check what's beyond this peg
+						// add the difference to find the potential 'to' position of the peg
+						var dx = n.Position.X - cell.Position.X;
+						var dy = n.Position.Y - cell.Position.Y;
+						var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
+
+						Cell toCell = null;
+						if (GameBoard.TryGetCellAtPosition(toPosition, out toCell) && !toCell.HasPeg)
+						{
+							hasAtLeastOneJumpableNeighbour = true;
+							break;
+						}
+					}
+				}
+				cell.CanPegMove = hasAtLeastOneJumpableNeighbour;
+			}
+		}
     }
 }

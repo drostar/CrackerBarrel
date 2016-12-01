@@ -75,6 +75,7 @@ namespace CrackerBarrel
         {
             cellView.transform.localPosition = cellPositionToViewportPosition(cell.Position);
             cellView.gameObject.name = $"C_{cell.Position.X}_{cell.Position.Y}";
+			cellView.Cell = cell;
         }
 
         Vector2 cellPositionToViewportPosition(CellPosition cellPosition)

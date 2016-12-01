@@ -31,4 +31,8 @@ sysinfo.txt
 
 # Licensed editor tools that can't be included in repo
 /Assets/ThirdParty/Haste
+/Assets/ThirdParty/Haste.meta
 /Assets/ThirdParty/Hierarchy2
+/Assets/ThirdParty/Hierarchy2.meta
+
+compilation.log
