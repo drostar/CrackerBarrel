@@ -13,7 +13,10 @@ namespace CrackerBarrel
         #region Injected Components
 
         [Inject]
-        InputManager inputManager; 
+        InputManager inputManager;
+
+        [Inject]
+        AudioManager audioManager;
 
         #endregion
 
@@ -141,6 +144,12 @@ namespace CrackerBarrel
                 // OPTIMIZE: Cache this since it only needs to be calculated once after the cell is selected.
                 cellVM.IsHighlighted = isHighlighted && GameBoard.IsValidMove(SelectedCell.Cell, cellVM.Cell);
             }
+
+            // Audio feedback of highlight
+            if (cellVM.IsHighlighted)
+            {
+                audioManager.PlayHighlight();
+            }
         }
 
         #endregion
@@ -165,6 +174,9 @@ namespace CrackerBarrel
             SelectedCell = cellVM;
             var holdPosition = PegHoldPosition.position;
             cellVM.SelectCell(holdPosition);
+
+            // Audio feedback of select
+            audioManager.PlaySelect();
         }
 
         private void clearSelectedCell()
@@ -204,6 +216,8 @@ namespace CrackerBarrel
             var toCell = toCellVM.Cell;
 
             inputManager.DisableInput = true;
+
+            audioManager.PlayMove();
 
             // Animate selected peg to 'to' cell
             // TODO: Make this not a callback but either a coroutine or async function

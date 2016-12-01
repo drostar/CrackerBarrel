@@ -11,6 +11,8 @@ namespace CrackerBarrel
     {
         [Inject]
         private GameController gameController { get; set; }
+        [Inject]
+        private AudioManager audioManager { get; set; }
 
         private bool _isGameOutOfMoves;
         public bool IsGameOutOfMoves {
@@ -78,12 +80,15 @@ namespace CrackerBarrel
             switch (state)
             {
                 case GameController.GameStates.WON:
+                    audioManager.PlayWin();
                     IsGameWon = true;
                     break;
                 case GameController.GameStates.LOST_OUTOFTIME:
+                    audioManager.PlayLoss();
                     IsGameOutOfTime = true;
                     break;
                 case GameController.GameStates.LOST_OUTOFMOVES:
+                    audioManager.PlayLoss();
                     IsGameOutOfMoves = true;
                     break;
                 default:
