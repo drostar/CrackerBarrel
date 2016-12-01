@@ -80,6 +80,19 @@ namespace CrackerBarrel
 
         private void selectCell(CellViewModel cellVM)
         {
+            // deselect old cell first
+            if (SelectedCell != null && SelectedCell != cellVM)
+            {
+                SelectedCell.DeselectCell();
+            }
+            // Don't reselect the same cell. Treat it as a deselect instead and bail out.
+            if (SelectedCell == cellVM)
+            {
+                clearSelectedCell();
+                return;
+            }
+
+            // note the select and signal the cell's viewmodel that it make the cell/peg look selected.
             SelectedCell = cellVM;
             var holdPosition = PegHoldPosition.position;
             cellVM.SelectCell(holdPosition);
@@ -90,6 +103,7 @@ namespace CrackerBarrel
             if (SelectedCell != null)
             {
                 SelectedCell.DeselectCell();
+                SelectedCell = null;
             }
         }
 

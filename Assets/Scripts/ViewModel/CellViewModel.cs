@@ -50,6 +50,10 @@ namespace CrackerBarrel
 
         public void SelectCell(Vector3 holdWorldPosition)
         {
+            // bail out to prevent animation from running again
+            if (IsSelected)
+                return;
+
             IsSelected = true;
 
             // trigger animation. There are better ways to do this, but this is good enough for now.
@@ -62,6 +66,10 @@ namespace CrackerBarrel
 
         public void DeselectCell()
         {
+            // bail out to prevent animation from running again
+            if (!IsSelected)
+                return;
+
             IsSelected = false;
 
             // trigger animation. There are better ways to do this, but this is good enough for now.
