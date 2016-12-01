@@ -33,6 +33,11 @@ namespace CrackerBarrel
         /// </summary>
         public float ElapsedTime { get { return Mathf.Min(Time.timeSinceLevelLoad - StartTime, TimeLimit); } }
         /// <summary>
+        /// Time time (in seconds) at which the player won.
+        /// </summary>
+        public float TimeLeftAtCompletion { get; private set; }
+
+        /// <summary>
         /// The time the player has left before they automatically lose, in seconds.
         /// </summary>
         public float TimeLeft { get { return Mathf.Max(TimeLimit - ElapsedTime, 0); } }
@@ -190,24 +195,12 @@ namespace CrackerBarrel
 
         #endregion
 
-        public void NewTriangleGame(int edgeLength, float timeLimitSeconds)
+        public void InitializeWithBoard(GameBoard gameBoard, float timeLimitSeconds)
         {
             StartTime = Time.timeSinceLevelLoad; // capture start time
             TimeLimit = timeLimitSeconds;
-            GameBoard = new GameBoard();
-
-            // build the cells on the board
-            CellPosition startPosition = new CellPosition() { X = 0, Y = edgeLength - 2 };
-            for (int y = 0; y < edgeLength; y++)
-            {
-                for (int x = 0; x < (edgeLength - y); x++)
-                {
-                    var cell = GameBoard.AddCell(x, y, false);
-                    cell.HasPeg = cell.Position != startPosition;
-                    cell.IsCornerCell = (x == 0 || y == 0 || x == edgeLength - 1 || y == edgeLength - 1);
-                }
-            }
-            updateAvailableMoves();
+            GameBoard = gameBoard;
+            GameBoard.UpdateAvailableMoves();
         }
 
         private void jump(CellViewModel fromCellVM, CellViewModel toCellVM)
@@ -233,7 +226,7 @@ namespace CrackerBarrel
                 MoveHistory.Moves.Add(jump);
 
                 // Update cell valid move states after this move
-                updateAvailableMoves();
+                GameBoard.UpdateAvailableMoves();
 
                 inputManager.DisableInput = false;
                 clearSelectedCell();
@@ -257,27 +250,22 @@ namespace CrackerBarrel
                 triggerLossByOutOfMoves();
             }
         }
-
-        private void updateAvailableMoves()
-        {
-            foreach (var cell in GameBoard.HexCells)
-            {
-                cell.CanPegMove = GameBoard.HasValidMovesFrom(cell);
-            }
-        }
-
+        
         private void triggerWin()
         {
+            TimeLeftAtCompletion = TimeLeft;
             OnGameEnded?.Invoke(GameStates.WON);
         }
 
         private void triggerLossByOutOfMoves()
         {
+            TimeLeftAtCompletion = TimeLeft;
             OnGameEnded?.Invoke(GameStates.LOST_OUTOFMOVES);
         }
 
         private void triggerLossByOutOfTime()
         {
+            TimeLeftAtCompletion = TimeLeft;
             OnGameEnded?.Invoke(GameStates.LOST_OUTOFTIME);
         }
 

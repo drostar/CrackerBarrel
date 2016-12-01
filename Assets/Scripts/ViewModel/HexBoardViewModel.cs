@@ -31,10 +31,8 @@ namespace CrackerBarrel
 
         void InitializeGame()
         {
-            gameController.NewTriangleGame(4, 60f * 3f);
-            //gameController.NewTriangleGame(5);
-            //gameController.NewTriangleGame(6);
-
+            var sceneParameters = GameBoardSceneParameters.GetParameters();
+            gameController.InitializeWithBoard(sceneParameters.GameBoard, sceneParameters.TimeLimit);
             BuildBoardView(gameController.GameBoard);
         }
 

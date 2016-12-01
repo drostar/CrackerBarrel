@@ -103,7 +103,18 @@ namespace CrackerBarrel
         {
             return GetValidMovesFrom(fromCell).Contains(toCell);
         }
-        
+
+        /// <summary>
+        /// Updates the all cells' <see cref="Cell.CanPegMove"/> property with current valid moves.
+        /// </summary>
+        public void UpdateAvailableMoves()
+        {
+            foreach (var cell in HexCells)
+            {
+                cell.CanPegMove = HasValidMovesFrom(cell);
+            }
+        }
+
         /// <summary>
         /// Returns the valid positions on the board adjacent to the give <paramref name="position"/>
         /// </summary>

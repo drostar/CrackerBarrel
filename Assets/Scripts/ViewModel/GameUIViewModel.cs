@@ -4,6 +4,7 @@ using System.Linq;
 using Foundation.Databinding;
 using Zenject;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace CrackerBarrel
 {
@@ -62,7 +63,12 @@ namespace CrackerBarrel
 
         private void updateTimeLeft()
         {
-            int secondsLeft = Mathf.CeilToInt(gameController.TimeLeft);
+            int secondsLeft;
+            if (gameController.GameState == GameController.GameStates.PLAYING)
+                secondsLeft = Mathf.CeilToInt(gameController.TimeLeft);
+            else
+                secondsLeft = Mathf.CeilToInt(gameController.TimeLeftAtCompletion);
+
             // Reduce unnecessary overhead/garbage by only updating when the full seconds have actually changed.
             if (secondsLeft != TimeRemainingSeconds)
             {
@@ -95,6 +101,15 @@ namespace CrackerBarrel
                     break;
             }
         }
+
+        #region Commands
+
+        public void LoadMainMenu()
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        #endregion
     }
 
 }

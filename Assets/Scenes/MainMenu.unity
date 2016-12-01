@@ -160,7 +160,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 934799898}
   m_HandleRect: {fileID: 934799897}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -619,7 +619,6 @@ GameObject:
   - 222: {fileID: 372802859}
   - 114: {fileID: 372802858}
   - 114: {fileID: 372802856}
-  - 114: {fileID: 372802857}
   m_Layer: 5
   m_Name: ReplaySelectWindow
   m_TagString: Untagged
@@ -645,7 +644,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.0811, y: -200}
+  m_AnchoredPosition: {x: 480.15167, y: -200}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &372802856
@@ -666,17 +665,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &372802857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 372802854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec49814d03f80674b9f035bb7425df07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &372802858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,6 +707,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 383023607}
   - 114: {fileID: 383023608}
+  - 114: {fileID: 383023609}
   m_Layer: 5
   m_Name: ReplaySelect
   m_TagString: Untagged
@@ -765,6 +754,17 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
+--- !u!114 &383023609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 383023606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec49814d03f80674b9f035bb7425df07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &448187005
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,6 +873,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08a75813158a66442add0ba022cf65ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DifficultySelectView: {fileID: 1068508396}
+  ReplaySelectView: {fileID: 383023609}
 --- !u!1 &459611724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1164,7 +1166,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 600890733}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1115028278}
+        m_MethodName: OpenDifficultySelect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &600890733
@@ -1275,7 +1288,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 682615818}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068508396}
+        m_MethodName: PlayEasyGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &682615818
@@ -1521,7 +1545,6 @@ GameObject:
   - 222: {fileID: 824411618}
   - 114: {fileID: 824411617}
   - 114: {fileID: 824411619}
-  - 114: {fileID: 824411620}
   m_Layer: 5
   m_Name: DifficultySelectWindow
   m_TagString: Untagged
@@ -1547,7 +1570,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 381.0811, y: -200}
+  m_AnchoredPosition: {x: 480.15167, y: -200}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &824411617
@@ -1601,17 +1624,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &824411620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 824411615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9db1ef431124c649a639bf85b4c59cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &934799896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,7 +1829,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1020410297}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068508396}
+        m_MethodName: PlayHardGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1020410297
@@ -1862,6 +1885,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1068508394}
   - 114: {fileID: 1068508395}
+  - 114: {fileID: 1068508396}
   m_Layer: 5
   m_Name: DifficultySelect
   m_TagString: Untagged
@@ -1908,6 +1932,17 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
+--- !u!114 &1068508396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1068508393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9db1ef431124c649a639bf85b4c59cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1092865668
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,7 +2018,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1092865671}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1115028278}
+        m_MethodName: OpenReplaySelect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1092865671
@@ -2028,6 +2074,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1115028276}
   - 114: {fileID: 1115028277}
+  - 114: {fileID: 1115028278}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -2074,6 +2121,19 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
+--- !u!114 &1115028278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1115028275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08a75813158a66442add0ba022cf65ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DifficultySelectView: {fileID: 1068508396}
+  ReplaySelectView: {fileID: 383023609}
 --- !u!1 &1256614768
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,7 +2357,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1516601384}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068508396}
+        m_MethodName: PlayNormalGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1516601384
@@ -2663,7 +2734,6 @@ GameObject:
   - 224: {fileID: 1735086394}
   - 222: {fileID: 1735086398}
   - 114: {fileID: 1735086397}
-  - 114: {fileID: 1735086396}
   - 114: {fileID: 1735086395}
   m_Layer: 5
   m_Name: MainMenuWindow
@@ -2709,17 +2779,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &1735086396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1735086393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9db1ef431124c649a639bf85b4c59cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1735086397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2829,7 +2888,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 733965995}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3092,7 +3151,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1963411441}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1068508396}
+        m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1963411441
@@ -3203,7 +3273,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1972096214}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 383023609}
+        m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1972096214
