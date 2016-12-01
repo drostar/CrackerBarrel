@@ -200,8 +200,12 @@ namespace CrackerBarrel
             inputManager.DisableInput = false;
             StartTime = Time.timeSinceLevelLoad; // capture start time
             TimeLimit = timeLimitSeconds;
+
             GameBoard = gameBoard;
             GameBoard.UpdateAvailableMoves();
+
+            MoveHistory.GameBoardData = GameBoardData.GetGameBoardData(gameBoard);
+            MoveHistory.TimeLimit = TimeLimit;
         }
 
         private void jump(CellViewModel fromCellVM, CellViewModel toCellVM)
@@ -274,9 +278,6 @@ namespace CrackerBarrel
         {
             TimeLeftAtCompletion = TimeLeft;
             inputManager.DisableInput = true;
-
-            // Save replay
-            
         }
 
     }

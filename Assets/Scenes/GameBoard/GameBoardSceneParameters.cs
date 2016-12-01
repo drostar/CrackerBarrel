@@ -21,5 +21,8 @@ namespace CrackerBarrel
 
         public GameBoard GameBoard { get; set; }
         public float TimeLimit { get; set; }
+
+        public GameMoveHistory ReplayHistory { get; set; }
+        public bool IsReplay { get { return ReplayHistory != null; } }
     } 
 }

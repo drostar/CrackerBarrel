@@ -112,13 +112,9 @@ namespace CrackerBarrel
 
         public void SaveReplay()
         {
-            string filename = DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
-            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            string saveName = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            var json = JsonUtility.ToJson(gameController.MoveHistory, prettyPrint:true);
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-            File.WriteAllText(filePath, json);
-            Debug.Log("File written to " + filePath);
+            ReplayManager.SaveReplay(gameController.MoveHistory, saveName);
 
             LoadMainMenu();
         }
