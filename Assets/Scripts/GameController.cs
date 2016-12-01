@@ -20,7 +20,7 @@ namespace CrackerBarrel
         public float StartTime { get; private set; }
         public float ElapsedTime { get { return Time.timeSinceLevelLoad - StartTime; } }
 
-        public GameMoveHistory MoveHistory { get; set; }
+        public GameMoveHistory MoveHistory { get; set; } = new GameMoveHistory();
         public GameBoard GameBoard { get; set; }
 
         private CellViewModel _selectedCell;
@@ -45,33 +45,64 @@ namespace CrackerBarrel
 
         void Start()
         {
-            inputManager.OnActivateObject += InputManager_OnActivateObject;
-            inputManager.OnHighlightObject += InputManager_OnHighlightObject;
+            inputManager.OnSelectObject += InputManager_OnSelectObject;
+            inputManager.OnObjectHighlightChanged += InputManager_OnObjectHighlightChanged;
         }
 
         #endregion
 
         #region Input Manager Event Handlers
 
-        void InputManager_OnActivateObject(GameObject obj)
+        void InputManager_OnSelectObject(GameObject obj)
         {
             CellViewModel cellVM = obj == null ? null : obj.GetComponent<CellViewModel>();
 
-            // Select the object if it's a valid movable piece
-            if (cellVM != null && GameBoard.HasValidMovesFrom(cellVM.Cell))
-            {
-                selectCell(cellVM);
-            }
-            else
+            // cellVM will be null to signal something other than a GameObject was clicked
+            if (cellVM == null)
             {
                 clearSelectedCell();
             }
+            else if (SelectedCell == null) 
+            {
+                // If no current selection, select the activated object if it has valid moves
+                if (cellVM.Cell.CanPegMove)
+                {
+                    selectCell(cellVM);
+                }
+                else
+                {
+                    clearSelectedCell();
+                }
+            }
+            else
+            {
+                // If there is a current selection then move the peg to the activated cell (if possible)
+                if (GameBoard.IsValidMove(SelectedCell.Cell, cellVM.Cell))
+                {
+                    Jump(SelectedCell, cellVM);
+                }
+                else
+                {
+                    clearSelectedCell();
+                }
+            }
         }
 
-        void InputManager_OnHighlightObject(bool isHighlighted, GameObject obj)
+        void InputManager_OnObjectHighlightChanged(bool isHighlighted, GameObject obj)
         {
             CellViewModel cellVM = obj.GetComponent<CellViewModel>();
-            cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
+
+            // If no current selection, highlight cells with pegs that can move
+            if (SelectedCell == null)
+            {
+                cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
+            }
+            // With a current selection, highlight cell where the selected peg can move to
+            else
+            {
+                // OPTIMIZE: Cache this since it only needs to be calculated once after the cell is selected.
+                cellVM.IsHighlighted = isHighlighted && GameBoard.IsValidMove(SelectedCell.Cell, cellVM.Cell);
+            }
         }
 
         #endregion
@@ -128,21 +159,35 @@ namespace CrackerBarrel
             updateAvailableMoves();
         }
 
-        public void Jump(CellPosition fromPosition, CellPosition toPosition)
+        public void Jump(CellViewModel fromCellVM, CellViewModel toCellVM)
         {
-            var fromCell = GameBoard.GetCellAtPosition(fromPosition);
-            var toCell = GameBoard.GetCellAtPosition(toPosition);
+            var fromCell = fromCellVM.Cell;
+            var toCell = toCellVM.Cell;
 
-            var jump = GameBoard.ExecuteJump(fromCell, toCell, ElapsedTime);
+            inputManager.DisableInput = true;
 
-            // Add move to history
-            MoveHistory.Moves.Add(jump);
+            // Animate selected peg to 'to' cell
+            // TODO: Make this not a callback but either a coroutine or async function
+            fromCellVM.JumpPegTo(toCellVM, () =>
+            {
+                // Update the game board with the Jump
+                var jump = GameBoard.ExecuteJump(fromCell, toCell, ElapsedTime);
 
-            // Update cell states after move
-            updateAvailableMoves();
+                // Return the 'from' cell's peg to its own cell
+                fromCellVM.ResetPeg();
 
-            // Trigger win/loss if this jump is the last possible.
-            checkForWinLose();
+                // Add move to history
+                MoveHistory.Moves.Add(jump);
+
+                // Update cell valid move states after this move
+                updateAvailableMoves();
+
+                inputManager.DisableInput = false;
+                clearSelectedCell();
+
+                // Trigger win/loss if this jump is the last possible.
+                checkForWinLose();
+            });
         }
 
         private void checkForWinLose()

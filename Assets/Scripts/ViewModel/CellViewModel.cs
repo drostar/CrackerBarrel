@@ -10,6 +10,8 @@ namespace CrackerBarrel
     public class CellViewModel : ObservableBehaviour
     {
         public GameObject Peg;
+        public float PegPullAnimationDuration = 0.2f;
+        public float PegMoveAnimationDuration = 0.2f;
 
         private Cell _cell;
         public Cell Cell { 
@@ -45,8 +47,35 @@ namespace CrackerBarrel
             }
         }
 
+        private bool isOriginalPositionCaptured = false;
         private Vector3 originalLocalPosition;
         private Vector3 originalLocalScale;
+        
+        #region A bit of hackery because DOTween is a bit buggy :(
+        private Sequence runningTween = null;
+        private void clearRunningTween()
+        {
+            runningTween = null;
+        }
+        private void captureOriginalPositionIfNeeded()
+        {
+            if (!isOriginalPositionCaptured)
+            {
+                originalLocalPosition = Peg.transform.localPosition;
+                originalLocalScale = Peg.transform.localScale;
+                isOriginalPositionCaptured = true;
+            }
+        }
+        private void restoreOriginalPostion()
+        {
+            clearRunningTween();
+            if (isOriginalPositionCaptured)
+            {
+                Peg.transform.localPosition = originalLocalPosition;
+                Peg.transform.localScale = originalLocalScale;
+            }
+        } 
+        #endregion
 
         public void SelectCell(Vector3 holdWorldPosition)
         {
@@ -55,14 +84,16 @@ namespace CrackerBarrel
                 return;
 
             IsSelected = true;
+            IsHighlighted = false; // Highlighting isn't relevent if we're already selected.
 
-            // trigger animation. There are better ways to do this, but this is good enough for now.
-            originalLocalPosition = Peg.transform.localPosition;
-            originalLocalScale = Peg.transform.localScale;
+            // trigger animation. There are better ways to animate, but this is good enough for now.
+            captureOriginalPositionIfNeeded();
             var t = Peg.transform;
-            DOTween.Sequence()
-                .Append(t.DOBlendableScaleBy(0.5f * Vector3.one, 0.2f)) // 2D represenation of peg coming out of board
-                .Append(t.DOMove(holdWorldPosition, 0.3f));
+            runningTween?.Kill(false);
+            runningTween = DOTween.Sequence()
+                .Append(t.DOScale(1.5f * Vector3.one, PegPullAnimationDuration))
+                .Append(t.DOMove(holdWorldPosition, PegMoveAnimationDuration))
+                .OnComplete(clearRunningTween);
         }
 
         public void DeselectCell()
@@ -73,11 +104,37 @@ namespace CrackerBarrel
 
             IsSelected = false;
 
-            // trigger animation. There are better ways to do this, but this is good enough for now.
+            // trigger animation. There are better ways to animate, but this is good enough for now.
             var t = Peg.transform;
+            runningTween?.Kill(false);
             DOTween.Sequence()
-                .Append(t.DOLocalMove(originalLocalPosition, 0.3f))
-                .Append(t.DOScale(originalLocalScale, 0.2f));           // 2D representation of peg going into board
+                .Append(t.DOLocalMove(originalLocalPosition, PegMoveAnimationDuration))
+                .Append(t.DOScale(originalLocalScale, PegPullAnimationDuration))
+                .OnComplete(restoreOriginalPostion);
+        }
+
+        public void JumpPegTo(CellViewModel selectedCell, Action callback)
+        {
+            var targetCell = selectedCell.Cell;
+            var targetPeg = selectedCell.Peg;
+            var targetWorldPosition = targetPeg.transform.position;
+
+            // trigger animation. There are better ways to animate, but this is good enough for now.
+            var t = Peg.transform;
+            runningTween?.Kill(true);
+            runningTween = DOTween.Sequence()
+                // move 'from' peg over top of the 'to' peg
+                .Append(t.DOMove(targetWorldPosition, PegMoveAnimationDuration))
+                // shrink the 'from' peg
+                .Append(t.DOScale(targetPeg.transform.localScale, PegPullAnimationDuration))
+                .AppendCallback(() => callback?.Invoke())
+                .OnComplete(clearRunningTween);
+                
+        }
+
+        public void ResetPeg()
+        {
+            restoreOriginalPostion();
         }
     }
 

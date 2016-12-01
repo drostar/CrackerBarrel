@@ -98,6 +98,11 @@ namespace CrackerBarrel
         {
             return GetValidMovesFrom(fromCell).Any();
         }
+
+        public bool IsValidMove(Cell fromCell, Cell toCell)
+        {
+            return GetValidMovesFrom(fromCell).Contains(toCell);
+        }
         
         /// <summary>
         /// Returns the valid positions on the board adjacent to the give <paramref name="position"/>
@@ -138,7 +143,7 @@ namespace CrackerBarrel
             var jumpedCell = GetCellAtPosition(jumpedPosition);
 
             // Apply the jump to the board
-            var jump = new Jump(fromPosition, toPosition) { TimeOffset = timestamp, JumpedPosition = jumpedPosition };
+            var jump = new Jump(fromPosition, toPosition, jumpedPosition, timestamp);
             fromCell.HasPeg = false;
             jumpedCell.HasPeg = false;
             toCell.HasPeg = true;

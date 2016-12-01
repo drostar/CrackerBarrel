@@ -36,9 +36,12 @@ namespace CrackerBarrel
 
         }
 
-        public Jump(CellPosition fromPosition, CellPosition toPosition)
+        public Jump(CellPosition fromPosition, CellPosition toPosition, CellPosition jumpedPosition, float timeOffset)
         {
-            throw new NotImplementedException();
+            this.FromPosition = fromPosition;
+            this.ToPosition = toPosition;
+            this.JumpedPosition = jumpedPosition;
+            this.TimeOffset = timeOffset;
         }
     }
 }

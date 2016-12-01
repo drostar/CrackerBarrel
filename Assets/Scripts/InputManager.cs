@@ -9,14 +9,21 @@ namespace CrackerBarrel
 {
     public class InputManager : MonoBehaviour
     {
-        public event Action<bool, GameObject> OnHighlightObject;
-        public event Action<GameObject> OnActivateObject;
+        public event Action<bool, GameObject> OnObjectHighlightChanged;
+        public event Action<GameObject> OnSelectObject;
 
         public GameObject CurrentHighlightObject { get; set; }
-        public GameObject CurrentActivateObject { get; set; }
+        public GameObject CurrentSelectedObject { get; set; }
+
+        public bool DisableInput { get; set; } = false;
         
         void Update()
         {
+            if (DisableInput)
+            {
+                return;
+            }
+
             // Bail out if mouse is over a UI element
             if (EventSystem.current.IsPointerOverGameObject())
             {
@@ -38,19 +45,18 @@ namespace CrackerBarrel
                 if (newMouseOverObject != CurrentHighlightObject)
                 {
                     if (CurrentHighlightObject != null)
-                        OnHighlightObject?.Invoke(false, CurrentHighlightObject);
+                        OnObjectHighlightChanged?.Invoke(false, CurrentHighlightObject);
                     
                     CurrentHighlightObject = newMouseOverObject;
 
-                    OnHighlightObject?.Invoke(true, CurrentHighlightObject);
+                    OnObjectHighlightChanged?.Invoke(true, CurrentHighlightObject);
                 }
 
                 // Check for mouse click
                 if (Input.GetMouseButtonDown(0))
                 {
-                    
-                    CurrentActivateObject = newMouseOverObject;
-                    OnActivateObject.Invoke(newMouseOverObject);
+                    CurrentSelectedObject = newMouseOverObject;
+                    OnSelectObject.Invoke(newMouseOverObject);
                 }
             }
             else
@@ -58,14 +64,14 @@ namespace CrackerBarrel
                 // If mouse clicked on something other than a game piece, make sure we clear the previous select
                 if (Input.GetMouseButtonDown(0))
                 {
-                    CurrentActivateObject = null;
-                    OnActivateObject?.Invoke(null);
+                    CurrentSelectedObject = null;
+                    OnSelectObject?.Invoke(null);
                 }
 
                 // If mouse hover over something other than a game piece, make sure we clear the previous highlight
                 if (CurrentHighlightObject != null)
                 {
-                    OnHighlightObject?.Invoke(false, CurrentHighlightObject);
+                    OnObjectHighlightChanged?.Invoke(false, CurrentHighlightObject);
                     CurrentHighlightObject = null;
                 }
             }
