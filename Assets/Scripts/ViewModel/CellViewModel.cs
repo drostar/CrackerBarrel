@@ -59,9 +59,10 @@ namespace CrackerBarrel
             // trigger animation. There are better ways to do this, but this is good enough for now.
             originalLocalPosition = Peg.transform.localPosition;
             originalLocalScale = Peg.transform.localScale;
+            var t = Peg.transform;
             DOTween.Sequence()
-                .Append(Peg.transform.DOBlendableScaleBy(0.5f * Vector3.one, 0.2f)) // 2D represenation of peg coming out of board
-                .Append(Peg.transform.DOMove(holdWorldPosition, 0.3f));
+                .Append(t.DOBlendableScaleBy(0.5f * Vector3.one, 0.2f)) // 2D represenation of peg coming out of board
+                .Append(t.DOMove(holdWorldPosition, 0.3f));
         }
 
         public void DeselectCell()
@@ -73,9 +74,10 @@ namespace CrackerBarrel
             IsSelected = false;
 
             // trigger animation. There are better ways to do this, but this is good enough for now.
+            var t = Peg.transform;
             DOTween.Sequence()
-                .Append(Peg.transform.DOLocalMove(originalLocalPosition, 0.3f))
-                .Append(Peg.transform.DOScale(originalLocalScale, 0.2f));           // 2D representation of peg going into board
+                .Append(t.DOLocalMove(originalLocalPosition, 0.3f))
+                .Append(t.DOScale(originalLocalScale, 0.2f));           // 2D representation of peg going into board
         }
     }
 

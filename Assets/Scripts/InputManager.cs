@@ -17,14 +17,14 @@ namespace CrackerBarrel
         
         void Update()
         {
-            // bail out if mouse is over a UI element
+            // Bail out if mouse is over a UI element
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                // TODO: unhighlight here?? or keep highlight while over UI? Not sure yet.
+                // TODO: Unhighlight here?? or keep highlight while over UI? Not sure yet.
                 return;
             }
 
-            // raycast to find mouse hit
+            // Raycast to find mouse hit
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D[] hitInfos = new RaycastHit2D[1];
 
@@ -33,7 +33,7 @@ namespace CrackerBarrel
             {
                 var hitInfo = hitInfos[0];
 
-                // raise mouse-over events
+                // Raise mouse-over events
                 var newMouseOverObject = hitInfo.collider.gameObject;
                 if (newMouseOverObject != CurrentHighlightObject)
                 {
@@ -45,23 +45,24 @@ namespace CrackerBarrel
                     OnHighlightObject?.Invoke(true, CurrentHighlightObject);
                 }
 
+                // Check for mouse click
                 if (Input.GetMouseButtonDown(0))
                 {
-                    // clicked
+                    
                     CurrentActivateObject = newMouseOverObject;
                     OnActivateObject.Invoke(newMouseOverObject);
                 }
             }
             else
             {
-                // if mouse clicked on something other than a game piece, make sure we clear the previous select
+                // If mouse clicked on something other than a game piece, make sure we clear the previous select
                 if (Input.GetMouseButtonDown(0))
                 {
                     CurrentActivateObject = null;
                     OnActivateObject?.Invoke(null);
                 }
 
-                // if mouse hover over something other than a game piece, make sure we clear the previous highlight
+                // If mouse hover over something other than a game piece, make sure we clear the previous highlight
                 if (CurrentHighlightObject != null)
                 {
                     OnHighlightObject?.Invoke(false, CurrentHighlightObject);

@@ -13,6 +13,7 @@ namespace CrackerBarrel
         public InvalidCellPositionException(string message) : base(message) { }
         public InvalidCellPositionException(string message, Exception inner) : base(message, inner) { }
         public InvalidCellPositionException(CellPosition position) : base($"Invalid Position {position}.") { }
-        public InvalidCellPositionException(CellPosition position, string message) : base($"Invalid Position {position}. {message}") { }
+        public InvalidCellPositionException(CellPosition position, string message)
+            : base($"Invalid Position {position}. {message}") { }
     }
 }

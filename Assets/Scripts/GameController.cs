@@ -57,7 +57,7 @@ namespace CrackerBarrel
         {
             CellViewModel cellVM = obj == null ? null : obj.GetComponent<CellViewModel>();
 
-            // select the object if it's a valid movable piece
+            // Select the object if it's a valid movable piece
             if (cellVM != null && GameBoard.HasValidMovesFrom(cellVM.Cell))
             {
                 selectCell(cellVM);
@@ -80,7 +80,7 @@ namespace CrackerBarrel
 
         private void selectCell(CellViewModel cellVM)
         {
-            // deselect old cell first
+            // Deselect old cell first
             if (SelectedCell != null && SelectedCell != cellVM)
             {
                 SelectedCell.DeselectCell();
@@ -92,7 +92,7 @@ namespace CrackerBarrel
                 return;
             }
 
-            // note the select and signal the cell's viewmodel that it make the cell/peg look selected.
+            // Note the select and signal the cell's viewmodel that it make the cell/peg look selected.
             SelectedCell = cellVM;
             var holdPosition = PegHoldPosition.position;
             cellVM.SelectCell(holdPosition);
@@ -135,10 +135,10 @@ namespace CrackerBarrel
 
             var jump = GameBoard.ExecuteJump(fromCell, toCell, ElapsedTime);
 
-            // add move to history
+            // Add move to history
             MoveHistory.Moves.Add(jump);
 
-            // update cell states after move
+            // Update cell states after move
             updateAvailableMoves();
 
             // Trigger win/loss if this jump is the last possible.

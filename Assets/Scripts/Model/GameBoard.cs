@@ -8,8 +8,7 @@ namespace CrackerBarrel
 {
     public class GameBoard
     {
-        // TODO: make accessor for getting all HexCells instead of accessing directly... at a likely cost of garbage though....
-        // TODO: optimize this cell lookup by CellPosition.
+        // TODO: Optimize this cell lookup by CellPosition and add an accessor
         public List<Cell> HexCells { get; private set; } = new List<Cell>();
 
         public static GameBoard Load(string filePath)
@@ -27,7 +26,7 @@ namespace CrackerBarrel
         public Cell AddCell(int x, int y, bool isCorner)
         {
             var cellPosition = new CellPosition(x, y);
-            // make sure we don't have a cell at this position already
+            // Make sure we don't have a cell at this position already
             if (HexCells.Any(c => c.Position == cellPosition))
                 throw new InvalidCellPositionException($"{cellPosition} already exists in the game board");
 
@@ -66,7 +65,7 @@ namespace CrackerBarrel
         /// <returns></returns>
         public IEnumerable<Cell> GetValidMovesFrom(Cell fromCell)
         {
-            // a cell can be part of a valid move if it has a peg 
+            // A cell can be part of a valid move if it has a peg 
             // AND has another peg as a neighbour
             // AND the the cell beyond that neighbour exists and is empty.
 
@@ -80,8 +79,8 @@ namespace CrackerBarrel
             {
                 if (n.HasPeg)
                 {
-                    // check what's beyond this peg
-                    // add the difference to find the potential 'to' position of the peg
+                    // Check what's beyond this peg
+                    // Add the difference to find the potential 'to' position of the peg
                     var dx = n.Position.X - fromCell.Position.X;
                     var dy = n.Position.Y - fromCell.Position.Y;
                     var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
@@ -126,17 +125,19 @@ namespace CrackerBarrel
             var fromPosition = fromCell.Position;
             var toPosition = toCell.Position;
 
-            // validate move
+            // Validate move
             if (!fromCell.HasPeg)
                 throw new InvalidMoveException($"From position {fromPosition} has no peg.");
             if (toCell.HasPeg)
                 throw new InvalidMoveException($"To position {toPosition} already has a peg.");
 
-            // update the game board for the move
-            var jumpedPosition = GetValidNeighbourPositions(fromPosition).Intersect(GetValidNeighbourPositions(toPosition)).Single(); // will throw if jump is invalid
+            // Update the game board for the move
+            var jumpedPosition = GetValidNeighbourPositions(fromPosition)
+                                .Intersect(GetValidNeighbourPositions(toPosition))
+                                .Single(); // Will throw if jump is invalid
             var jumpedCell = GetCellAtPosition(jumpedPosition);
 
-            // apply the jump to the board
+            // Apply the jump to the board
             var jump = new Jump(fromPosition, toPosition) { TimeOffset = timestamp, JumpedPosition = jumpedPosition };
             fromCell.HasPeg = false;
             jumpedCell.HasPeg = false;

@@ -15,11 +15,12 @@ public class TransformAnchor : MonoBehaviour
 
     void Start()
     {
-        // NOTE: running this in Start() instead of Update() means we're assuming the camera doesn't move, which is true for our current case...
+        // NOTE: running this in Start() instead of Update() means we're assuming the camera doesn't move
         updatePosition();
     }
 
-    // Only run on Update() in editor mode because we want immediate feedback at design time but we don't need the constant update overhead at runtime.
+    // Only run on Update() in editor mode because we want immediate feedback at design time
+    // But we don't need the constant update overhead at runtime.
 #if UNITY_EDITOR
     void Update()
     {
@@ -32,7 +33,7 @@ public class TransformAnchor : MonoBehaviour
 
     void updatePosition()
     {
-        // get the anchored screen edge
+        // Get the anchored screen edge
         float vx, vy;
         vx = (horizontalAnchor == HorizontalAnchor.LEFT) ? 0f : 1f;
         vy = (verticalAnchor == VerticalAnchor.BOTTOM) ? 0f : 1f;

@@ -13,7 +13,10 @@ namespace CrackerBarrel
         #region Unity Inspector Fields
 
         public CellViewModel CellPrefab;
-        public Vector2 CellSpacing = new Vector2(1f, 1f); // temporarilty have fixed sizes until we get the basic visuals working
+
+        // Ideally CellSpacing would be calculated based on the CellPrefab but for now it must be manually specified.
+        [Tooltip("Adjust cell spacing to match the size of the cell prefab")]
+        public Vector2 CellSpacing = new Vector2(1f, 1f);
 
         #endregion
 
@@ -39,7 +42,7 @@ namespace CrackerBarrel
         {
             int minX = 0, minY = 0, maxX = 0, maxY = 0;
 
-            // draw visuals based on the state of the game board.
+            // Draw visuals based on the state of the game board.
             foreach (var cell in board.HexCells)
             {
                 var cellView = Instantiate(CellPrefab.gameObject).GetComponent<CellViewModel>();
@@ -52,7 +55,7 @@ namespace CrackerBarrel
                 maxY = Mathf.Max(maxY, cell.Position.Y);
             }
 
-            // position hex board such that the entire board is centered around (0,0)
+            // Position hex board such that the entire board is centered around (0,0)
             var width = CellSpacing.x * (maxX - minX);
             var height = CellSpacing.y * (maxY - minY);
             centerBoard(width, height);
@@ -80,7 +83,8 @@ namespace CrackerBarrel
 
         Vector2 cellPositionToViewportPosition(CellPosition cellPosition)
         {
-            // the coordinates in the model are such that visual x moves a half cell to the right on each move up one row. So add the row offset.
+            // The coordinates in model are such that visual x moves a half cell to the right on each move up one row.
+            // So add the row offset.
             float rowOffset = cellPosition.Y * (0.5f * CellSpacing.x);
             float x = cellPosition.X * CellSpacing.x + rowOffset;
             float y = cellPosition.Y * CellSpacing.y;
