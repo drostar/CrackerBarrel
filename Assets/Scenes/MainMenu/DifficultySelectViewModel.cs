@@ -4,6 +4,7 @@ using System.Linq;
 using Foundation.Databinding;
 using UnityEngine.SceneManagement;
 using System;
+using System.IO;
 
 namespace CrackerBarrel
 {
@@ -27,6 +28,7 @@ namespace CrackerBarrel
                 GameBoard = GameBoardGenerator.CreateTriangleGame(4),
                 TimeLimit = (60f * 3f), // 3 minutes
             });
+            
             SceneManager.LoadScene("GameBoard");
         }
 
@@ -47,6 +49,22 @@ namespace CrackerBarrel
                 GameBoard = GameBoardGenerator.CreateTriangleGame(6),
                 TimeLimit = (60f * 3f), // 3 minutes
             });
+            SceneManager.LoadScene("GameBoard");
+        }
+
+        public void LoadGame()
+        {
+            // Load from streaming assets for demonstration purposes.
+            string filePath = Path.Combine(Application.streamingAssetsPath, "diamondBoard.json");
+            string json = File.ReadAllText(filePath);
+            var gameBoard = GameBoardData.DeserializeGameboard(json);
+
+            GameBoardSceneParameters.SetParameters(new GameBoardSceneParameters()
+            {
+                GameBoard = gameBoard,
+                TimeLimit = (60f * 3f), // 3 minutes
+            });
+
             SceneManager.LoadScene("GameBoard");
         }
 
