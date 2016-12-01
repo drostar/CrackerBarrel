@@ -14,22 +14,22 @@ namespace CrackerBarrel
         /// <summary>
         /// The original position of the target peg
         /// </summary>
-        public CellPosition FromPosition { get; set; }
+        public CellPosition FromPosition;
 
         /// <summary>
         /// The position that the target peg was moved into
         /// </summary>
-        public CellPosition ToPosition { get; set; }
+        public CellPosition ToPosition;
 
         /// <summary>
         /// The position of the peg that was jumped (and removed)
         /// </summary>
-        public CellPosition JumpedPosition { get; set; }
+        public CellPosition JumpedPosition;
 
         /// <summary>
         /// Time elapsed since the beginning of the game that this move was made (in seconds).
         /// </summary>
-        public float TimeOffset { get; set; }
+        public float TimeOffset;
 
         public Jump()
         {

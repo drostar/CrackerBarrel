@@ -21,17 +21,17 @@ namespace CrackerBarrel
         
         void Update()
         {
-            
+
             // TODO: Instead of switching input manager logic via if/else here, create InputManager interface and
             //       load the correct input manager class for the current platform
-            //if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            //{
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            {
                 updateAndroid();
-            //}
-            //else
-            //{
-            //    updateDesktop();
-            //}
+            }
+            else
+            {
+                updateDesktop();
+            }
         }
 
 

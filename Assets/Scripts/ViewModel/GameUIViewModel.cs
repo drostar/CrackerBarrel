@@ -4,6 +4,7 @@ using System.Linq;
 using Foundation.Databinding;
 using Zenject;
 using System;
+using System.IO;
 using UnityEngine.SceneManagement;
 
 namespace CrackerBarrel
@@ -109,6 +110,19 @@ namespace CrackerBarrel
             SceneManager.LoadScene("MainMenu");
         }
 
+        public void SaveReplay()
+        {
+            string filename = DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+
+            var json = JsonUtility.ToJson(gameController.MoveHistory, prettyPrint:true);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            File.WriteAllText(filePath, json);
+            Debug.Log("File written to " + filePath);
+
+            LoadMainMenu();
+        }
+        
         #endregion
     }
 

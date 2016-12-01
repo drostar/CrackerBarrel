@@ -11,10 +11,7 @@ namespace CrackerBarrel
         // TODO: Optimize this cell lookup by CellPosition and add an accessor
         public List<Cell> HexCells { get; private set; } = new List<Cell>();
 
-        public static GameBoard Load(string filePath)
-        {
-            throw new NotImplementedException();
-        }
+        public CellPosition StartPosition { get; private set; }
 
         /// <summary>
         /// Adds a cell to the game board and returns a reference to the newly added cell
@@ -26,6 +23,11 @@ namespace CrackerBarrel
         public Cell AddCell(int x, int y, bool isCorner)
         {
             var cellPosition = new CellPosition(x, y);
+            return AddCell(cellPosition);
+        }
+
+        public Cell AddCell(CellPosition cellPosition)
+        {
             // Make sure we don't have a cell at this position already
             if (HexCells.Any(c => c.Position == cellPosition))
                 throw new InvalidCellPositionException($"{cellPosition} already exists in the game board");
@@ -35,6 +37,12 @@ namespace CrackerBarrel
             return newCell;
         }
 
+        public void SetStartPosition(CellPosition startPosition)
+        {
+            StartPosition = startPosition;
+            var cell = GetCellAtPosition(startPosition);
+            cell.HasPeg = false;
+        }
 
         public bool IsValidCellPosition(CellPosition position)
         {

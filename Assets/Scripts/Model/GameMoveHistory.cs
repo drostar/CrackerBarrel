@@ -5,12 +5,12 @@ using System.Text;
 
 namespace CrackerBarrel
 {
-    [Serializable()]
+    [Serializable]
     public class GameMoveHistory
     {
         /// <summary>
         /// The moves that a player has executed since the beginning of the game.
         /// </summary>
-        public List<Jump> Moves { get; set; } = new List<Jump>();
+        public List<Jump> Moves = new List<Jump>();
     }
 }

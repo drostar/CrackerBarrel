@@ -6,6 +6,7 @@ using System.Text;
 
 namespace CrackerBarrel
 {
+    [Serializable]
     public class Cell : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

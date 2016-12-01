@@ -254,23 +254,29 @@ namespace CrackerBarrel
         
         private void triggerWin()
         {
-            TimeLeftAtCompletion = TimeLeft;
-            inputManager.DisableInput = true;
+            endGameCleanup();
             OnGameEnded?.Invoke(GameStates.WON);
         }
 
         private void triggerLossByOutOfMoves()
         {
-            TimeLeftAtCompletion = TimeLeft;
-            inputManager.DisableInput = true;
+            endGameCleanup();
             OnGameEnded?.Invoke(GameStates.LOST_OUTOFMOVES);
         }
 
         private void triggerLossByOutOfTime()
         {
+            endGameCleanup();
+            OnGameEnded?.Invoke(GameStates.LOST_OUTOFTIME);
+        }
+
+        private void endGameCleanup()
+        {
             TimeLeftAtCompletion = TimeLeft;
             inputManager.DisableInput = true;
-            OnGameEnded?.Invoke(GameStates.LOST_OUTOFTIME);
+
+            // Save replay
+            
         }
 
     }

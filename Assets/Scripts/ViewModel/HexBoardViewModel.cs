@@ -32,6 +32,13 @@ namespace CrackerBarrel
         void InitializeGame()
         {
             var sceneParameters = GameBoardSceneParameters.GetParameters();
+            if (sceneParameters == null)
+            {
+                // Start with a default board for testing directly from GameBoard scene.
+                sceneParameters = new GameBoardSceneParameters() {
+                    GameBoard = GameBoardGenerator.CreateTriangleGame(4), TimeLimit = 180f
+                };
+            }
             gameController.InitializeWithBoard(sceneParameters.GameBoard, sceneParameters.TimeLimit);
             BuildBoardView(gameController.GameBoard);
         }
