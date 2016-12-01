@@ -31,7 +31,7 @@ namespace CrackerBarrel
 
         void InitializeGame()
         {
-            gameController.NewTriangleGame(4);
+            gameController.NewTriangleGame(4, 60f * 3f);
             //gameController.NewTriangleGame(5);
             //gameController.NewTriangleGame(6);
 

@@ -17,8 +17,22 @@ namespace CrackerBarrel
 
         #endregion
 
+        /// <summary>
+        /// The game engine time (seconds) at which the player has started the round.
+        /// </summary>
         public float StartTime { get; private set; }
-        public float ElapsedTime { get { return Time.timeSinceLevelLoad - StartTime; } }
+        /// <summary>
+        /// The time limit (in seconds) the player has to win the game before automatically losing.
+        /// </summary>
+        public float TimeLimit { get; private set; }
+        /// <summary>
+        /// The time the player has played this round so far, in seconds.
+        /// </summary>
+        public float ElapsedTime { get { return Mathf.Min(Time.timeSinceLevelLoad - StartTime, TimeLimit); } }
+        /// <summary>
+        /// The time the player has left before they automatically lose, in seconds.
+        /// </summary>
+        public float TimeLeft { get { return Mathf.Max(TimeLimit - ElapsedTime, 0); } }
 
         public GameMoveHistory MoveHistory { get; set; } = new GameMoveHistory();
         public GameBoard GameBoard { get; set; }
@@ -35,9 +49,27 @@ namespace CrackerBarrel
             }
         }
 
-        #region Inpsector Fields
+        public enum GameStates { PLAYING, WON, LOST_OUTOFTIME, LOST_OUTOFMOVES }
+        private GameStates _gameState;
+        public GameStates GameState {
+            get { return _gameState; }
+            set {
+                if (_gameState == value)
+                    return;
+                _gameState = value;
+                RaiseBindingUpdate(nameof(GameState), _gameState);
+            }
+        }
+
+        #region Inspector Fields
 
         public Transform PegHoldPosition;
+
+        #endregion
+
+        #region Events
+
+        public event Action<GameStates> OnGameEnded;
 
         #endregion
 
@@ -47,6 +79,12 @@ namespace CrackerBarrel
         {
             inputManager.OnSelectObject += InputManager_OnSelectObject;
             inputManager.OnObjectHighlightChanged += InputManager_OnObjectHighlightChanged;
+        }
+
+        void Update()
+        {
+            if (ElapsedTime >= TimeLimit)
+                triggerLossByOutOfTime();
         }
 
         #endregion
@@ -140,9 +178,10 @@ namespace CrackerBarrel
 
         #endregion
 
-        public void NewTriangleGame(int edgeLength)
+        public void NewTriangleGame(int edgeLength, float timeLimitSeconds)
         {
             StartTime = Time.timeSinceLevelLoad; // capture start time
+            TimeLimit = timeLimitSeconds;
             GameBoard = new GameBoard();
 
             // build the cells on the board
@@ -201,7 +240,7 @@ namespace CrackerBarrel
             // A loss is when there is more than 1 peg left and there are no more valid moves
             else if (pegsLeft > 1 && !GameBoard.HexCells.Any(x => x.CanPegMove))
             {
-                triggerLoss();
+                triggerLossByOutOfMoves();
             }
         }
 
@@ -215,12 +254,17 @@ namespace CrackerBarrel
 
         private void triggerWin()
         {
-            Debug.Log("WIN");
+            OnGameEnded?.Invoke(GameStates.WON);
         }
 
-        private void triggerLoss()
+        private void triggerLossByOutOfMoves()
         {
-            Debug.Log("LOSS");
+            OnGameEnded?.Invoke(GameStates.LOST_OUTOFMOVES);
+        }
+
+        private void triggerLossByOutOfTime()
+        {
+            OnGameEnded?.Invoke(GameStates.LOST_OUTOFTIME);
         }
 
     }
