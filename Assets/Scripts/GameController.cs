@@ -197,6 +197,7 @@ namespace CrackerBarrel
 
         public void InitializeWithBoard(GameBoard gameBoard, float timeLimitSeconds)
         {
+            inputManager.DisableInput = false;
             StartTime = Time.timeSinceLevelLoad; // capture start time
             TimeLimit = timeLimitSeconds;
             GameBoard = gameBoard;
@@ -254,18 +255,21 @@ namespace CrackerBarrel
         private void triggerWin()
         {
             TimeLeftAtCompletion = TimeLeft;
+            inputManager.DisableInput = true;
             OnGameEnded?.Invoke(GameStates.WON);
         }
 
         private void triggerLossByOutOfMoves()
         {
             TimeLeftAtCompletion = TimeLeft;
+            inputManager.DisableInput = true;
             OnGameEnded?.Invoke(GameStates.LOST_OUTOFMOVES);
         }
 
         private void triggerLossByOutOfTime()
         {
             TimeLeftAtCompletion = TimeLeft;
+            inputManager.DisableInput = true;
             OnGameEnded?.Invoke(GameStates.LOST_OUTOFTIME);
         }
 
