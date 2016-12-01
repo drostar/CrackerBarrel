@@ -23,6 +23,24 @@ namespace CrackerBarrel
         public GameMoveHistory MoveHistory { get; set; }
         public GameBoard GameBoard { get; set; }
 
+        private CellViewModel _selectedCell;
+        public CellViewModel SelectedCell {
+            get { return _selectedCell; }
+            set
+            {
+                if (_selectedCell == value)
+                    return;
+                _selectedCell = value;
+                RaiseBindingUpdate(nameof(SelectedCell), _selectedCell);
+            }
+        }
+
+        #region Inpsector Fields
+
+        public Transform PegHoldPosition;
+
+        #endregion
+
         #region Unity Message Handlers
 
         void Start()
@@ -37,14 +55,42 @@ namespace CrackerBarrel
 
         void InputManager_OnActivateObject(GameObject obj)
         {
-            CellViewModel cellVM = obj.GetComponent<CellViewModel>();
+            CellViewModel cellVM = obj == null ? null : obj.GetComponent<CellViewModel>();
 
+            // select the object if it's a valid movable piece
+            if (cellVM != null && GameBoard.HasValidMovesFrom(cellVM.Cell))
+            {
+                selectCell(cellVM);
+            }
+            else
+            {
+                clearSelectedCell();
+            }
         }
 
         void InputManager_OnHighlightObject(bool isHighlighted, GameObject obj)
         {
             CellViewModel cellVM = obj.GetComponent<CellViewModel>();
             cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
+        }
+
+        #endregion
+
+        #region Selection
+
+        private void selectCell(CellViewModel cellVM)
+        {
+            SelectedCell = cellVM;
+            var holdPosition = PegHoldPosition.position;
+            cellVM.SelectCell(holdPosition);
+        }
+
+        private void clearSelectedCell()
+        {
+            if (SelectedCell != null)
+            {
+                SelectedCell.DeselectCell();
+            }
         }
 
         #endregion
@@ -94,38 +140,7 @@ namespace CrackerBarrel
         {
             foreach (var cell in GameBoard.HexCells)
             {
-                // a cell can be part of a valid move if it has a peg 
-                // AND has another peg as a neighbour
-                // AND the the cell beyond that neighbour exists and is empty.
-
-                if (!cell.HasPeg)
-                {
-                    cell.CanPegMove = false;
-                    continue;
-                }
-
-                // TODO: extract this to GameBoard.GetValidMovesFrom(...)
-                bool hasAtLeastOneJumpableNeighbour = false;
-                var neighbourCells = GameBoard.GetValidNeighbourPositions(cell.Position).Select(x => GameBoard.GetCellAtPosition(x));
-                foreach (var n in neighbourCells)
-                {
-                    if (n.HasPeg)
-                    {
-                        // check what's beyond this peg
-                        // add the difference to find the potential 'to' position of the peg
-                        var dx = n.Position.X - cell.Position.X;
-                        var dy = n.Position.Y - cell.Position.Y;
-                        var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
-
-                        Cell toCell = null;
-                        if (GameBoard.TryGetCellAtPosition(toPosition, out toCell) && !toCell.HasPeg)
-                        {
-                            hasAtLeastOneJumpableNeighbour = true;
-                            break;
-                        }
-                    }
-                }
-                cell.CanPegMove = hasAtLeastOneJumpableNeighbour;
+                cell.CanPegMove = GameBoard.HasValidMovesFrom(cell);
             }
         }
     }

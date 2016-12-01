@@ -54,6 +54,14 @@ namespace CrackerBarrel
             }
             else
             {
+                // if mouse clicked on something other than a game piece, make sure we clear the previous select
+                if (Input.GetMouseButtonDown(0))
+                {
+                    CurrentActivateObject = null;
+                    OnActivateObject?.Invoke(null);
+                }
+
+                // if mouse hover over something other than a game piece, make sure we clear the previous highlight
                 if (CurrentHighlightObject != null)
                 {
                     OnHighlightObject?.Invoke(false, CurrentHighlightObject);

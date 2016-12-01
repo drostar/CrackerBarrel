@@ -64,9 +64,40 @@ namespace CrackerBarrel
         /// </summary>
         /// <param name="fromCell"></param>
         /// <returns></returns>
-        public Cell[] GetValidMovesFrom(Cell fromCell)
+        public IEnumerable<Cell> GetValidMovesFrom(Cell fromCell)
         {
-            throw new NotImplementedException();
+            // a cell can be part of a valid move if it has a peg 
+            // AND has another peg as a neighbour
+            // AND the the cell beyond that neighbour exists and is empty.
+
+            if (!fromCell.HasPeg)
+            {
+                yield break;
+            }
+
+            var neighbourCells = GetValidNeighbourPositions(fromCell.Position).Select(x => GetCellAtPosition(x));
+            foreach (var n in neighbourCells)
+            {
+                if (n.HasPeg)
+                {
+                    // check what's beyond this peg
+                    // add the difference to find the potential 'to' position of the peg
+                    var dx = n.Position.X - fromCell.Position.X;
+                    var dy = n.Position.Y - fromCell.Position.Y;
+                    var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
+
+                    Cell toCell = null;
+                    if (TryGetCellAtPosition(toPosition, out toCell) && !toCell.HasPeg)
+                    {
+                        yield return toCell;
+                    }
+                }
+            }
+        }
+
+        public bool HasValidMovesFrom(Cell fromCell)
+        {
+            return GetValidMovesFrom(fromCell).Any();
         }
         
         /// <summary>
