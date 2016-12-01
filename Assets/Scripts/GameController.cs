@@ -79,7 +79,7 @@ namespace CrackerBarrel
                 // If there is a current selection then move the peg to the activated cell (if possible)
                 if (GameBoard.IsValidMove(SelectedCell.Cell, cellVM.Cell))
                 {
-                    Jump(SelectedCell, cellVM);
+                    jump(SelectedCell, cellVM);
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace CrackerBarrel
             GameBoard = new GameBoard();
 
             // build the cells on the board
-            CellPosition startPosition = new CellPosition() { X = 1, Y = edgeLength - 3 };
+            CellPosition startPosition = new CellPosition() { X = 0, Y = edgeLength - 2 };
             for (int y = 0; y < edgeLength; y++)
             {
                 for (int x = 0; x < (edgeLength - y); x++)
@@ -159,7 +159,7 @@ namespace CrackerBarrel
             updateAvailableMoves();
         }
 
-        public void Jump(CellViewModel fromCellVM, CellViewModel toCellVM)
+        private void jump(CellViewModel fromCellVM, CellViewModel toCellVM)
         {
             var fromCell = fromCellVM.Cell;
             var toCell = toCellVM.Cell;
@@ -192,7 +192,17 @@ namespace CrackerBarrel
 
         private void checkForWinLose()
         {
-
+            int pegsLeft = GameBoard.HexCells.Count(x => x.HasPeg);
+            // A win is when there is only 1 peg left.
+            if (pegsLeft == 1)
+            {
+                triggerWin();
+            }
+            // A loss is when there is more than 1 peg left and there are no more valid moves
+            else if (pegsLeft > 1 && !GameBoard.HexCells.Any(x => x.CanPegMove))
+            {
+                triggerLoss();
+            }
         }
 
         private void updateAvailableMoves()
@@ -202,5 +212,16 @@ namespace CrackerBarrel
                 cell.CanPegMove = GameBoard.HasValidMovesFrom(cell);
             }
         }
+
+        private void triggerWin()
+        {
+            Debug.Log("WIN");
+        }
+
+        private void triggerLoss()
+        {
+            Debug.Log("LOSS");
+        }
+
     }
 }
