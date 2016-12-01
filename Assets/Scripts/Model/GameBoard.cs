@@ -9,7 +9,7 @@ namespace CrackerBarrel
     public class GameBoard
     {
         // TODO: make accessor for getting all HexCells instead of accessing directly... at a likely cost of garbage though....
-		// TODO: optimize this cell lookup by CellPosition.
+        // TODO: optimize this cell lookup by CellPosition.
         public List<Cell> HexCells { get; private set; } = new List<Cell>();
 
         public static GameBoard Load(string filePath)
@@ -37,10 +37,10 @@ namespace CrackerBarrel
         }
 
 
-		public bool IsValidCellPosition(CellPosition position)
-		{
-			return HexCells.Any(o => o.Position == position);
-		}
+        public bool IsValidCellPosition(CellPosition position)
+        {
+            return HexCells.Any(o => o.Position == position);
+        }
         public Cell GetCellAtPosition(CellPosition position)
         {
             var result = HexCells.FirstOrDefault(o => o.Position == position);
@@ -48,16 +48,16 @@ namespace CrackerBarrel
                 throw new InvalidCellPositionException(position);
             return result;
         }
-		public bool TryGetCellAtPosition(CellPosition position, out Cell cell)
-		{
-			cell = HexCells.FirstOrDefault(o => o.Position == position);
-			return cell != null;
-		}
+        public bool TryGetCellAtPosition(CellPosition position, out Cell cell)
+        {
+            cell = HexCells.FirstOrDefault(o => o.Position == position);
+            return cell != null;
+        }
 
-		public Cell GetCellAtPosition(int x, int y)
-		{
-			return GetCellAtPosition(new CellPosition(x, y));
-		}
+        public Cell GetCellAtPosition(int x, int y)
+        {
+            return GetCellAtPosition(new CellPosition(x, y));
+        }
 
         /// <summary>
         /// Returns the valid target cells if player were to attempt to move the given <paramref name="fromCell"/>
@@ -74,20 +74,20 @@ namespace CrackerBarrel
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-		public IEnumerable<CellPosition> GetValidNeighbourPositions(CellPosition position)
+        public IEnumerable<CellPosition> GetValidNeighbourPositions(CellPosition position)
         {
-			CellPosition[] possibleNeighbours = new[]
-			{
-				new CellPosition(position.X - 1, position.Y),
-				new CellPosition(position.X + 1, position.Y),
-				new CellPosition(position.X - 1, position.Y + 1),
-				new CellPosition(position.X, position.Y + 1),
-				new CellPosition(position.X, position.Y - 1),
-				new CellPosition(position.X + 1, position.Y - 1),
-			};
+            CellPosition[] possibleNeighbours = new[]
+            {
+                new CellPosition(position.X - 1, position.Y),
+                new CellPosition(position.X + 1, position.Y),
+                new CellPosition(position.X - 1, position.Y + 1),
+                new CellPosition(position.X, position.Y + 1),
+                new CellPosition(position.X, position.Y - 1),
+                new CellPosition(position.X + 1, position.Y - 1),
+            };
 
-			var validNeighbours = possibleNeighbours.Intersect(HexCells.Select(x => x.Position));
-			return validNeighbours;
+            var validNeighbours = possibleNeighbours.Intersect(HexCells.Select(x => x.Position));
+            return validNeighbours;
         }
 
         public Jump ExecuteJump(Cell fromCell, Cell toCell, float timestamp)
@@ -97,9 +97,9 @@ namespace CrackerBarrel
 
             // validate move
             if (!fromCell.HasPeg)
-                throw new InvalidMoveException($"{fromPosition} has no peg.");
+                throw new InvalidMoveException($"From position {fromPosition} has no peg.");
             if (toCell.HasPeg)
-                throw new InvalidMoveException($"{toPosition} has no peg.");
+                throw new InvalidMoveException($"To position {toPosition} already has a peg.");
 
             // update the game board for the move
             var jumpedPosition = GetValidNeighbourPositions(fromPosition).Intersect(GetValidNeighbourPositions(toPosition)).Single(); // will throw if jump is invalid

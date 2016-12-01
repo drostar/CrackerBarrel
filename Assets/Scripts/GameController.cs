@@ -23,33 +23,33 @@ namespace CrackerBarrel
         public GameMoveHistory MoveHistory { get; set; }
         public GameBoard GameBoard { get; set; }
 
-		#region Unity Message Handlers
+        #region Unity Message Handlers
 
-		void Start()
-		{
-			inputManager.OnActivateObject += InputManager_OnActivateObject;
-			inputManager.OnHighlightObject += InputManager_OnHighlightObject;
-		}
+        void Start()
+        {
+            inputManager.OnActivateObject += InputManager_OnActivateObject;
+            inputManager.OnHighlightObject += InputManager_OnHighlightObject;
+        }
 
-		#endregion
+        #endregion
 
-		#region Input Manager Event Handlers
+        #region Input Manager Event Handlers
 
-		void InputManager_OnActivateObject(GameObject obj)
-		{
-			CellViewModel cellVM = obj.GetComponent<CellViewModel>();
+        void InputManager_OnActivateObject(GameObject obj)
+        {
+            CellViewModel cellVM = obj.GetComponent<CellViewModel>();
 
-		}
+        }
 
-		void InputManager_OnHighlightObject(bool isHighlighted, GameObject obj)
-		{
-			CellViewModel cellVM = obj.GetComponent<CellViewModel>();
-			cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
-		}
+        void InputManager_OnHighlightObject(bool isHighlighted, GameObject obj)
+        {
+            CellViewModel cellVM = obj.GetComponent<CellViewModel>();
+            cellVM.IsHighlighted = isHighlighted && cellVM.Cell.CanPegMove;
+        }
 
-		#endregion
+        #endregion
 
-		public void NewTriangleGame(int edgeLength)
+        public void NewTriangleGame(int edgeLength)
         {
             StartTime = Time.timeSinceLevelLoad; // capture start time
             GameBoard = new GameBoard();
@@ -62,13 +62,12 @@ namespace CrackerBarrel
                 {
                     var cell = GameBoard.AddCell(x, y, false);
                     cell.HasPeg = cell.Position != startPosition;
-					cell.IsCornerCell = (x == 0 || y == 0 || x == edgeLength - 1 || y == edgeLength - 1);
+                    cell.IsCornerCell = (x == 0 || y == 0 || x == edgeLength - 1 || y == edgeLength - 1);
                 }
             }
-			updateAvailableMoves();
+            updateAvailableMoves();
         }
 
-        // TODO: move Jump to GameBoard class?
         public void Jump(CellPosition fromPosition, CellPosition toPosition)
         {
             var fromCell = GameBoard.GetCellAtPosition(fromPosition);
@@ -79,55 +78,55 @@ namespace CrackerBarrel
             // add move to history
             MoveHistory.Moves.Add(jump);
 
-			// update cell states after move
-			updateAvailableMoves();
+            // update cell states after move
+            updateAvailableMoves();
 
             // Trigger win/loss if this jump is the last possible.
             checkForWinLose();
         }
 
-		private void checkForWinLose()
+        private void checkForWinLose()
         {
 
         }
 
-		private void updateAvailableMoves()
-		{
-			foreach (var cell in GameBoard.HexCells)
-			{
-				// a cell can be part of a valid move if it has a peg 
-				// AND has another peg as a neighbour
-				// AND the the cell beyond that neighbour exists and is empty.
+        private void updateAvailableMoves()
+        {
+            foreach (var cell in GameBoard.HexCells)
+            {
+                // a cell can be part of a valid move if it has a peg 
+                // AND has another peg as a neighbour
+                // AND the the cell beyond that neighbour exists and is empty.
 
-				if (!cell.HasPeg)
-				{
-					cell.CanPegMove = false;
-					continue;
-				}
+                if (!cell.HasPeg)
+                {
+                    cell.CanPegMove = false;
+                    continue;
+                }
 
-				// TODO: extract this to GameBoard.GetValidMovesFrom(...)
-				bool hasAtLeastOneJumpableNeighbour = false;
-				var neighbourCells = GameBoard.GetValidNeighbourPositions(cell.Position).Select(x => GameBoard.GetCellAtPosition(x));
-				foreach (var n in neighbourCells)
-				{
-					if (n.HasPeg)
-					{
-						// check what's beyond this peg
-						// add the difference to find the potential 'to' position of the peg
-						var dx = n.Position.X - cell.Position.X;
-						var dy = n.Position.Y - cell.Position.Y;
-						var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
+                // TODO: extract this to GameBoard.GetValidMovesFrom(...)
+                bool hasAtLeastOneJumpableNeighbour = false;
+                var neighbourCells = GameBoard.GetValidNeighbourPositions(cell.Position).Select(x => GameBoard.GetCellAtPosition(x));
+                foreach (var n in neighbourCells)
+                {
+                    if (n.HasPeg)
+                    {
+                        // check what's beyond this peg
+                        // add the difference to find the potential 'to' position of the peg
+                        var dx = n.Position.X - cell.Position.X;
+                        var dy = n.Position.Y - cell.Position.Y;
+                        var toPosition = new CellPosition(n.Position.X + dx, n.Position.Y + dy);
 
-						Cell toCell = null;
-						if (GameBoard.TryGetCellAtPosition(toPosition, out toCell) && !toCell.HasPeg)
-						{
-							hasAtLeastOneJumpableNeighbour = true;
-							break;
-						}
-					}
-				}
-				cell.CanPegMove = hasAtLeastOneJumpableNeighbour;
-			}
-		}
+                        Cell toCell = null;
+                        if (GameBoard.TryGetCellAtPosition(toPosition, out toCell) && !toCell.HasPeg)
+                        {
+                            hasAtLeastOneJumpableNeighbour = true;
+                            break;
+                        }
+                    }
+                }
+                cell.CanPegMove = hasAtLeastOneJumpableNeighbour;
+            }
+        }
     }
 }
