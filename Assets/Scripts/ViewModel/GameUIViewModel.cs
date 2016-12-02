@@ -52,9 +52,21 @@ namespace CrackerBarrel
         public int TimeRemainingSeconds { get; private set; }
         public string TimeRemainingFormatted { get; private set; }
 
+        private bool _isReplay;
+        public bool IsReplay {
+            get { return _isReplay; }
+            set {
+                if (_isReplay == value)
+                    return;
+                _isReplay = value;
+                RaiseBindingUpdate(nameof(IsReplay), _isReplay);
+            }
+        }
+
         void Start()
         {
             gameController.OnGameEnded += GameController_OnGameEnded;
+            IsReplay = GameBoardSceneParameters.GetParameters()?.IsReplay ?? false;
         }
 
         void Update()
