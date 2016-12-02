@@ -48,8 +48,8 @@ namespace CrackerBarrel
         }
 
         private bool isOriginalPositionCaptured = false;
-        private Vector3 originalLocalPosition;
-        private Vector3 originalLocalScale;
+        public Vector3 originalLocalPosition { get; private set; }
+        public Vector3 originalLocalScale { get; private set; }
         
         #region A bit of hackery because DOTween is a bit buggy :(
         private Sequence runningTween = null;
@@ -76,6 +76,11 @@ namespace CrackerBarrel
             }
         } 
         #endregion
+
+        public void Initialize()
+        {
+            captureOriginalPositionIfNeeded();
+        }
 
         public void SelectCell(Vector3 holdWorldPosition)
         {

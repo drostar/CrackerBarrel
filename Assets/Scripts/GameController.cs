@@ -101,6 +101,9 @@ namespace CrackerBarrel
 
         void InputManager_OnSelectObject(GameObject obj)
         {
+            if (!isActiveAndEnabled)
+                return;
+            
             CellViewModel cellVM = obj == null ? null : obj.GetComponent<CellViewModel>();
 
             // cellVM will be null to signal something other than a GameObject was clicked
@@ -136,6 +139,9 @@ namespace CrackerBarrel
 
         void InputManager_OnObjectHighlightChanged(bool isHighlighted, GameObject obj)
         {
+            if (!isActiveAndEnabled)
+                return;
+
             CellViewModel cellVM = obj.GetComponent<CellViewModel>();
 
             // If no current selection, highlight cells with pegs that can move

@@ -151,9 +151,9 @@ namespace CrackerBarrel
 
             // Validate move
             if (!fromCell.HasPeg)
-                throw new InvalidMoveException($"From position {fromPosition} has no peg.");
+                throw new InvalidMoveException($"'From' position {fromPosition} has no peg.");
             if (toCell.HasPeg)
-                throw new InvalidMoveException($"To position {toPosition} already has a peg.");
+                throw new InvalidMoveException($"'To' position {toPosition} already has a peg.");
 
             // Update the game board for the move
             var jumpedPosition = GetValidNeighbourPositions(fromPosition)
@@ -168,6 +168,24 @@ namespace CrackerBarrel
             toCell.HasPeg = true;
 
             return jump;
+        }
+
+        public void UndoJump(Jump jump)
+        {
+            var fromCell = GetCellAtPosition(jump.FromPosition);
+            var jumpedCell = GetCellAtPosition(jump.JumpedPosition);
+            var toCell = GetCellAtPosition(jump.ToPosition);
+
+            // Validate undo move
+            if (!toCell.HasPeg)
+                throw new InvalidMoveException($"'To' position {jump.ToPosition} has no peg.");
+            if (fromCell.HasPeg)
+                throw new InvalidMoveException($"'From' position {jump.FromPosition} already has a peg.");
+
+            // Update the game board with the undone move
+            fromCell.HasPeg = true;
+            jumpedCell.HasPeg = true;
+            toCell.HasPeg = false;
         }
     }
 }

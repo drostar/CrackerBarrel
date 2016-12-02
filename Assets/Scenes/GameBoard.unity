@@ -96,6 +96,7 @@ GameObject:
   - 222: {fileID: 39467581}
   - 114: {fileID: 39467580}
   - 114: {fileID: 39467579}
+  - 114: {fileID: 39467582}
   m_Layer: 5
   m_Name: NextButton
   m_TagString: Untagged
@@ -196,6 +197,27 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 39467577}
+--- !u!114 &39467582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 39467577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a053472ad5c5543afa06058f437325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BindingProxy: {fileID: 0}
+  DebugMode: 0
+  EnabledBinding:
+    BindingName: Enabled
+    Filters: 1
+    MemberName: CanReplayForward
+  OnClickBinding:
+    BindingName: OnClick
+    Filters: 0
+    MemberName: MoveReplayForward
 --- !u!1 &44993759
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +480,7 @@ RectTransform:
   - {fileID: 838897129}
   - {fileID: 1798336243}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -475,6 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686684861ae859d45b15b9eaa170e5aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameBoardViewModel: {fileID: 755616814}
 --- !u!114 &77206957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,7 +575,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &102653103
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +736,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &142928993
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +1017,63 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 178305726}
+--- !u!1 &210209384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 210209386}
+  - 114: {fileID: 210209385}
+  - 114: {fileID: 210209387}
+  m_Layer: 0
+  m_Name: ReplayManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &210209385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 210209384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2453a232ba485fb4bba15ff13c78e774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &210209386
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 210209384}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+--- !u!114 &210209387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 210209384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 210209385}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1 &221703282
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,7 +1747,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 783848581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.702528, y: 3.6399999, z: -9.700012}
+  m_LocalPosition: {x: -4.5953484, y: 3.6399999, z: -9.700012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -2100,7 +2180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &943002493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2408,7 +2488,7 @@ Transform:
   - {fileID: 755616815}
   - {fileID: 783848582}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!1 &1199750806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2489,6 +2569,7 @@ GameObject:
   - 222: {fileID: 1247506205}
   - 114: {fileID: 1247506204}
   - 114: {fileID: 1247506203}
+  - 114: {fileID: 1247506206}
   m_Layer: 5
   m_Name: PrevButton
   m_TagString: Untagged
@@ -2589,6 +2670,27 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1247506201}
+--- !u!114 &1247506206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1247506201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a053472ad5c5543afa06058f437325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BindingProxy: {fileID: 0}
+  DebugMode: 0
+  EnabledBinding:
+    BindingName: Enabled
+    Filters: 1
+    MemberName: CanReplayBackward
+  OnClickBinding:
+    BindingName: OnClick
+    Filters: 0
+    MemberName: MoveReplayBackward
 --- !u!1 &1339756655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2846,7 +2948,7 @@ Transform:
   - {fileID: 1977638309}
   - {fileID: 858919850}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!1 &1490963855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3868,4 +3970,4 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
