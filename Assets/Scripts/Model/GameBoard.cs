@@ -37,6 +37,15 @@ namespace CrackerBarrel
             return newCell;
         }
 
+        public void AddCell(Cell cell)
+        {
+            // Make sure we don't have a cell at this position already
+            if (HexCells.Any(c => c.Position == cell.Position))
+                throw new InvalidCellPositionException($"{cell.Position} already exists in the game board");
+
+            HexCells.Add(cell);
+        }
+
         public void SetStartPosition(CellPosition startPosition)
         {
             StartPosition = startPosition;
@@ -123,12 +132,7 @@ namespace CrackerBarrel
             }
         }
 
-        /// <summary>
-        /// Returns the valid positions on the board adjacent to the give <paramref name="position"/>
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public IEnumerable<CellPosition> GetValidNeighbourPositions(CellPosition position)
+        public CellPosition[] GetPossibleNeighbourPositions(CellPosition position)
         {
             CellPosition[] possibleNeighbours = new[]
             {
@@ -139,6 +143,18 @@ namespace CrackerBarrel
                 new CellPosition(position.X, position.Y - 1),
                 new CellPosition(position.X + 1, position.Y - 1),
             };
+
+            return possibleNeighbours;
+        }
+
+        /// <summary>
+        /// Returns the valid positions on the board adjacent to the give <paramref name="position"/>
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public IEnumerable<CellPosition> GetValidNeighbourPositions(CellPosition position)
+        {
+            CellPosition[] possibleNeighbours = GetPossibleNeighbourPositions(position);
 
             var validNeighbours = possibleNeighbours.Intersect(HexCells.Select(x => x.Position));
             return validNeighbours;

@@ -47,6 +47,20 @@ namespace CrackerBarrel
             }
         }
 
+        private bool _isExpanderCell;
+        /// <summary>
+        /// Used by editor to indicate this is a cell that can be added to the board by clicking it.
+        /// </summary>
+        public bool IsExpanderCell {
+            get { return _isExpanderCell; }
+            set {
+                if (value == _isExpanderCell)
+                    return;
+                _isExpanderCell = value;
+                RaiseBindingUpdate(nameof(IsExpanderCell), _isExpanderCell);
+            }
+        }
+
         private bool isOriginalPositionCaptured = false;
         public Vector3 originalLocalPosition { get; private set; }
         public Vector3 originalLocalScale { get; private set; }

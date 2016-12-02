@@ -167,15 +167,13 @@ namespace CrackerBarrel
 
             var fromCell = replayManager.GameBoard.GetCellAtPosition(move.FromPosition);
             var toCell = replayManager.GameBoard.GetCellAtPosition(move.ToPosition);
-            var jumpCell = replayManager.GameBoard.GetCellAtPosition(move.JumpedPosition);
 
             var fromVM = GameBoardViewModel.GetCellViewModelFor(fromCell);
             var toVM = GameBoardViewModel.GetCellViewModelFor(toCell);
-            var jumpVM = GameBoardViewModel.GetCellViewModelFor(jumpCell);
 
             fromVM.Peg.transform.DOMove(toVM.Peg.transform.position, 0.1f).SetAutoKill().OnKill(() => {
                 fromVM.ResetPeg();
-                var jump = replayManager.StepForward();
+                replayManager.StepForward();
                 replayManager.GameBoard.UpdateAvailableMoves();
 
                 RaiseBindingUpdate(nameof(CanReplayForward), CanReplayForward);
@@ -189,11 +187,9 @@ namespace CrackerBarrel
 
             var fromCell = replayManager.GameBoard.GetCellAtPosition(move.FromPosition);
             var toCell = replayManager.GameBoard.GetCellAtPosition(move.ToPosition);
-            var jumpCell = replayManager.GameBoard.GetCellAtPosition(move.JumpedPosition);
 
             var fromVM = GameBoardViewModel.GetCellViewModelFor(fromCell);
             var toVM = GameBoardViewModel.GetCellViewModelFor(toCell);
-            var jumpVM = GameBoardViewModel.GetCellViewModelFor(jumpCell);
 
             // Position peg in 'finished' position so we can rewind it by animation
             fromVM.Peg.transform.position = toVM.Peg.transform.position;
