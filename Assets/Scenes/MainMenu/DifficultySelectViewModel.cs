@@ -10,6 +10,15 @@ namespace CrackerBarrel
 {
     public class DifficultySelectViewModel : ObservableBehaviour
     {
+        public LoadDialogViewModel LoadDialogView;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (LoadDialogView == null)
+                Debug.LogError($"Inspector field {nameof(LoadDialogView)} not set.");
+        }
+
         public void Open()
         {
             gameObject.SetActive(true);
@@ -54,18 +63,24 @@ namespace CrackerBarrel
 
         public void LoadGame()
         {
-            // Load from streaming assets for demonstration purposes.
-            string filePath = Path.Combine(Application.streamingAssetsPath, "diamondBoard.json");
-            string json = File.ReadAllText(filePath);
-            var gameBoard = GameBoardData.DeserializeGameboard(json);
-
-            GameBoardSceneParameters.SetParameters(new GameBoardSceneParameters()
+            // Ask the user what board they want to load.
+            LoadDialogView.Open(EditorBoardStorage.ListSavedBoards(), result =>
             {
-                GameBoard = gameBoard,
-                TimeLimit = (60f * 3f), // 3 minutes
+                if (!result.Canceled)
+                {
+                    // Load the board and play it.
+                    var gameBoard = EditorBoardStorage.LoadBoard(result.Name);
+                    GameBoardSceneParameters.SetParameters(new GameBoardSceneParameters()
+                    {
+                        GameBoard = gameBoard,
+                        TimeLimit = (60f * 3f), // 3 minutes
+                    });
+
+                    SceneManager.LoadScene("GameBoard");
+                }
             });
 
-            SceneManager.LoadScene("GameBoard");
+
         }
 
         #endregion

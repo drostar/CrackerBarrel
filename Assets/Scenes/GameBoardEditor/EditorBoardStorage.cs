@@ -13,8 +13,8 @@ namespace CrackerBarrel
 
         public static void SaveBoard(GameBoard gameBoard, string saveName)
         {
-            var filePath = saveNameToFilePath(saveName);
             var json = GameBoardData.SerializeGameBoard(gameBoard);
+            var filePath = saveNameToFilePath(saveName);
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             File.WriteAllText(filePath, json);
             Debug.Log("File written to " + filePath);

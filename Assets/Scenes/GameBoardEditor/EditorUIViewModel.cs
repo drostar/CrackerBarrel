@@ -36,7 +36,8 @@ namespace CrackerBarrel
             {
                 if (!result.Canceled)
                 {
-                    Debug.Log("SAVE as " + result.Name);
+                    GameBoard gameBoard = HexBoardView.GetCurrentBoard(result.Name);
+                    EditorBoardStorage.SaveBoard(gameBoard, result.Name);
                 }
             });
         }
@@ -47,7 +48,8 @@ namespace CrackerBarrel
             {
                 if (!result.Canceled)
                 {
-                    Debug.Log("LOAD " + result.Name);
+                    GameBoard gameBoard = EditorBoardStorage.LoadBoard(result.Name);
+                    HexBoardView.LoadBoard(gameBoard);
                 }
             });
         }

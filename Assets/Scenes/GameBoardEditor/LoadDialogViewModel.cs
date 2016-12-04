@@ -4,6 +4,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Foundation.Databinding;
+using System.ComponentModel;
 
 namespace CrackerBarrel
 {
@@ -22,9 +23,9 @@ namespace CrackerBarrel
             gameObject.SetActive(true);
         }
 
-        public void CloseWithResponse(string name)
+        public void CloseWithResponse(SavedBoardViewModel savedBoard)
         {
-            var r = new DialogResult() { Name = name };
+            var r = new DialogResult() { Name = savedBoard.Name };
             UserResponse = r;
             close();
             callback?.Invoke(r);
@@ -53,13 +54,8 @@ namespace CrackerBarrel
         }
     }
 
-    public class SavedBoardViewModel : ObservableBehaviour
+    public class SavedBoardViewModel
     {
         public string Name { get; set; }
-
-        public void Select()
-        {
-            GetComponentInParent<LoadDialogViewModel>().CloseWithResponse(Name);
-        }
     }
 }
