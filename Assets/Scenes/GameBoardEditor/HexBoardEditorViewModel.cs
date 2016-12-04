@@ -31,6 +31,9 @@ namespace CrackerBarrel
 
         void InputManager_OnSelectObject(GameObject obj)
         {
+            if (obj == null)
+                return;
+
             CellViewModel vm = obj.GetComponent<CellViewModel>();
             // If this is an expander cell, convert this cell to a real cell and add expanders around it.
             if (vm.IsExpanderCell)

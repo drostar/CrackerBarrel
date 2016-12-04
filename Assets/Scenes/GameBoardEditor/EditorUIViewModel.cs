@@ -2,28 +2,54 @@
 using System.Collections;
 using Foundation.Databinding;
 using System;
+using System.IO;
 
 namespace CrackerBarrel
 {
     public class EditorUIViewModel : ObservableBehaviour
     {
-        public HexBoardViewModel HexBoardView;
+        public HexBoardEditorViewModel HexBoardView;
+        public LoadDialogViewModel LoadDialogView;
+        public SaveDialogViewModel SaveDialogView;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (HexBoardView == null)
+                Debug.LogError($"Inspector field {nameof(HexBoardView)} was not set");
+            if (LoadDialogView == null)
+                Debug.LogError($"Inspector field {nameof(LoadDialogView)} was not set");
+            if (SaveDialogView == null)
+                Debug.LogError($"Inspector field {nameof(SaveDialogView)} was not set");
+        }
 
         #region Commands
 
         public void New()
         {
-            throw new NotImplementedException();
+            HexBoardView.NewBoard();
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            SaveDialogView.Open((result) =>
+            {
+                if (!result.Canceled)
+                {
+                    Debug.Log("SAVE as " + result.Name);
+                }
+            });
         }
 
         public void Load()
         {
-            throw new NotImplementedException();
+            LoadDialogView.Open(EditorBoardStorage.ListSavedBoards(), (result) =>
+            {
+                if (!result.Canceled)
+                {
+                    Debug.Log("LOAD " + result.Name);
+                }
+            });
         }
 
         #endregion
