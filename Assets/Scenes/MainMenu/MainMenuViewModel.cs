@@ -23,6 +23,10 @@ namespace CrackerBarrel
             ReplaySelectView.Open();
         }
 
+        public void OpenEditor()
+        {
+            SceneManager.LoadScene("GameBoardEditor");
+        }
         #endregion
     }
 

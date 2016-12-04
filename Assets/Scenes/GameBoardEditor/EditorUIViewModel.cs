@@ -3,6 +3,7 @@ using System.Collections;
 using Foundation.Databinding;
 using System;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace CrackerBarrel
 {
@@ -52,6 +53,11 @@ namespace CrackerBarrel
                     HexBoardView.LoadBoard(gameBoard);
                 }
             });
+        }
+
+        public void MainMenu()
+        {
+            SceneManager.LoadScene("MainMenu");
         }
 
         #endregion
