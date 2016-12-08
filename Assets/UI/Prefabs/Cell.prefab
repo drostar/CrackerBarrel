@@ -31,7 +31,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &159388
 GameObject:
   m_ObjectHideFlags: 1
@@ -322,7 +322,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BindingProxy: {fileID: 0}
   DebugMode: 0
-  InverseTargets: []
+  InverseTargets:
+  - {fileID: 199498}
   Targets:
   - {fileID: 151868}
   ValueBinding:
@@ -466,7 +467,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5babb15c2b94b6f4298a19111fd6a83f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b86261c8cea7d22488da49b60a23f3be, type: 3}
   m_Color: {r: 0, g: 0.832, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

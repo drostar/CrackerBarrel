@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Zenject;
+using System;
 
 namespace CrackerBarrel
 {
@@ -31,6 +32,9 @@ namespace CrackerBarrel
 
         void InputManager_OnSelectObject(GameObject obj)
         {
+            if (obj == null)
+                return;
+
             CellViewModel vm = obj.GetComponent<CellViewModel>();
             // If this is an expander cell, convert this cell to a real cell and add expanders around it.
             if (vm.IsExpanderCell)
@@ -59,20 +63,70 @@ namespace CrackerBarrel
             ClearChildren();
             gameBoard = new GameBoard();
             var initialCell = AddCell(new CellPosition(0, 0));
+            initialCell.Cell.HasPeg = false;
             AddExpanderCellsAround(initialCell);
+        }
+
+        public void LoadBoard(GameBoard gameBoard)
+        {
+            ClearChildren();
+            this.gameBoard = gameBoard;
+
+            // Make a copy of the list so we can modify the current gameBoard as we add expanders.
+            var gameBoardCells = gameBoard.HexCells.ToArray();
+
+            // Add cell views for actual cells
+            foreach (var cell in gameBoardCells)
+            {
+                var cellVM = AddCellVM(cell);
+
+                // Add expanders
+                AddExpanderCellsAround(cellVM);
+            }
+
+            this.gameBoard.GetCellAtPosition(gameBoard.StartPosition).HasPeg = false;
+        }
+
+        public GameBoard GetCurrentBoard(string name)
+        {
+            var usedCells = transform.GetComponentsInChildren<CellViewModel>().Where(x => !x.IsExpanderCell).Select(x => x.Cell);
+
+            // Whichever cell has no peg will be the starter cell.
+            var startCell = usedCells.Where(x => !x.HasPeg).FirstOrDefault();
+            // Or if none have no peg, then we'll just make the initial cell the starter cell.
+            if (startCell == null)
+                startCell = usedCells.First();
+
+            // Rebuild the gameboard based on the used cells.
+            GameBoard gb = new GameBoard();
+            foreach (var cell in usedCells)
+            {
+                gb.AddCell(cell);
+            }
+            gb.SetStartPosition(startCell.Position);
+
+            return gb;
         }
 
         public CellViewModel AddCell(CellPosition cellPosition)
         {
+            var cell = new Cell(cellPosition);
+            var cellView = AddCellVM(cell);
+            gameBoard.AddCell(cellView.Cell);
+
+            return cellView;
+        }
+
+        public CellViewModel AddCellVM(Cell cell)
+        {
             var cellView = Instantiate(CellPrefab.gameObject).GetComponent<CellViewModel>();
             cellView.transform.SetParent(transform, worldPositionStays: false);
-            cellView.transform.localPosition = cellPositionToViewportPosition(cellPosition);
-            cellView.gameObject.name = $"C_{cellPosition.X}_{cellPosition.Y}";
-            cellView.Cell = new Cell(cellPosition);
+            cellView.transform.localPosition = cellPositionToViewportPosition(cell.Position);
+            cellView.gameObject.name = $"C_{cell.Position.X}_{cell.Position.Y}";
+
+            cellView.Cell = cell;
             cellView.Cell.HasPeg = true;
             cellView.Initialize();
-
-            gameBoard.AddCell(cellView.Cell);
 
             return cellView;
         }

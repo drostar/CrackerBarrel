@@ -97,7 +97,7 @@ namespace CrackerBarrel
         }
 
         #region Static - Load and Save
-        private static string baseDirectory { get { return Application.persistentDataPath; } }
+        private static string baseDirectory { get { return Path.Combine(Application.persistentDataPath, "Replays"); } }
 
         public static void SaveReplay(GameMoveHistory moveHistory, string saveName)
         {
@@ -118,8 +118,15 @@ namespace CrackerBarrel
 
         public static string[] ListSavedReplays()
         {
-            var files = Directory.GetFiles(baseDirectory);
-            return files.Select(x => filePathToSaveName(x)).ToArray();
+            if (Directory.Exists(baseDirectory))
+            {
+                var files = Directory.GetFiles(baseDirectory, "*.json");
+                return files.Select(x => filePathToSaveName(x)).ToArray();
+            }
+            else
+            {
+                return new string[0];
+            }
         }
 
         private static string saveNameToFilePath(string saveName)
